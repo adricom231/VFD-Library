@@ -14,12 +14,26 @@ VFD clon(dataPin_enable, clockPin_enable, latchPin_enable, 1);
 
 void setup() {
   vfd.begin();
+  clon.begin();
   clon.onAll();
-  vfd.printDisplay("[A5]");
+  byte pattern[6] = {
+    B10110111,
+    B00001000,
+    B00010111,
+    B10110001,
+    B00001000,
+    B10110111
+  };
+  vfd.printDisplayRaw(pattern);
+  delay(5000);
+  vfd.printDisplay("-[AS]-");
 }
 
 
 void loop() {
+
+
+
 }
 
 

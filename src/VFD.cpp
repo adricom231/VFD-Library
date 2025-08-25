@@ -39,7 +39,7 @@ void VFD::begin()
 }
 
 void VFD::printDisplay(String text){
-    _text = text;
+    String _text = text;
     digitalWrite(_latchPin, LOW);
     char SelInput = ' ';
     if(_text.length() < _numberOfTubes){
@@ -58,11 +58,43 @@ void VFD::printDisplay(String text){
   digitalWrite(_latchPin, HIGH);
 }
 
+
+void VFD::printDisplayNC(String textNC){
+    String _text = textNC;
+    digitalWrite(_latchPin, LOW);
+    char SelInput = ' ';
+    for(int i = _numberOfTubes - 1 ; i >= 0 ; i--){
+        SelInput = _text[i];
+        shiftOut(_dataPin, _clockPin, MSBFIRST, _VfdTable[SelInput]);
+     }
+    digitalWrite(_latchPin, HIGH);
+}
+
+
+void VFD::printDisplayRaw(byte patterns[]){
+    digitalWrite(_latchPin, LOW);
+    for(int i = _numberOfTubes - 1 ; i >= 0 ; i--){
+        shiftOut(_dataPin, _clockPin, MSBFIRST, patterns[i]);
+    }
+    digitalWrite(_latchPin, HIGH);
+}
+
+
+
 void VFD::onAll(){
-    _data = B11111111;
+    byte _data = B11111111;
     digitalWrite(_latchPin, LOW);
     for(int i = _numberOfTubes - 1 ; i >= 0 ; i--){
         shiftOut(_dataPin, _clockPin, MSBFIRST, _data);
     }
     digitalWrite(_latchPin, HIGH);
 }
+
+void VFD::offAll(){
+    byte _dataz = B00000000;
+    digitalWrite(_latchPin, LOW);
+    for(int i = _numberOfTubes - 1 ; i >= 0 ; i--){
+        shiftOut(_dataPin, _clockPin, MSBFIRST, _dataz);
+    }
+    digitalWrite(_latchPin, HIGH);
+} 

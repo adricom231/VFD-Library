@@ -16,15 +16,15 @@ class VFD
         VFD(int dataPin, int clockPin, int latchPin, int numberOfTubes);
         void begin();
         void printDisplay(String text);
+        void printDisplayNC(String textNC);
+        void printDisplayRaw(byte patterns[]);
         void onAll();
+        void offAll();
     private:
         int _dataPin;
         int _clockPin;
         int _latchPin;
         int _numberOfTubes;
-        String _text;
-        char SelInput;
-        byte _data;
         byte _VfdTable[128];
 };
 
