@@ -30,11 +30,17 @@ void tableSetup(){
   VfdTable['D'] = B10110111;
   VfdTable['E'] = B00011111;
   VfdTable['F'] = B00011110;
+
 }
 
 void printDisplay(String input){
   digitalWrite(latchPin_vfd, LOW);
   char SelInput = ' ';
+  if(input.length() == 5){    input = input + " ";  }
+  if(input.length() == 4){    input = " " + input + " ";  }
+  if(input.length() == 3){    input = " " + input + "  ";  }
+  if(input.length() == 2){    input = "  " + input + "  ";  }
+  if(input.length() == 1){    input = "  " + input + "   ";  }
   for(int i = 6; i >= 0 ; i--){
     SelInput = input[i];
     shiftOut(dataPin_vfd, clockPin_vfd, MSBFIRST, VfdTable[SelInput]);
@@ -63,7 +69,7 @@ void setup() {
   
   tableSetup();
   enableAll();
-  printDisplay("123456");
+  printDisplay("-[A5]-");
 
 
 }
