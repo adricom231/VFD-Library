@@ -1,5 +1,5 @@
 #include <Arduino.h>
-
+#include <VFD.h>
 int latchPin_vfd = 2;
 int clockPin_vfd = 1;
 int dataPin_vfd = 44;
@@ -7,46 +7,9 @@ int dataPin_vfd = 44;
 int latchPin_enable = 7;
 int clockPin_enable = 8;
 int dataPin_enable = 9;
+const int NrOfTubes = 6;
 
-
-byte VfdTable[128] = {0};
-void tableSetup(){
-  VfdTable['-'] = B00001000;
-  VfdTable['['] = B00010111;
-  VfdTable[']'] = B10110001;
-  VfdTable['0'] = B10110111;
-  VfdTable['1'] = B10100000;
-  VfdTable['2'] = B00111011;
-  VfdTable['3'] = B10111001;
-  VfdTable['4'] = B10101100;
-  VfdTable['5'] = B10011101;
-  VfdTable['6'] = B10011111;
-  VfdTable['7'] = B10110000;
-  VfdTable['8'] = B10111111;
-  VfdTable['9'] = B10111101;
-  VfdTable['A'] = B10111110;
-  VfdTable['B'] = B10111111;
-  VfdTable['C'] = B00010111;
-  VfdTable['D'] = B10110111;
-  VfdTable['E'] = B00011111;
-  VfdTable['F'] = B00011110;
-
-}
-
-void printDisplay(String input){
-  digitalWrite(latchPin_vfd, LOW);
-  char SelInput = ' ';
-  if(input.length() == 5){    input = input + " ";  }
-  if(input.length() == 4){    input = " " + input + " ";  }
-  if(input.length() == 3){    input = " " + input + "  ";  }
-  if(input.length() == 2){    input = "  " + input + "  ";  }
-  if(input.length() == 1){    input = "  " + input + "   ";  }
-  for(int i = 6; i >= 0 ; i--){
-    SelInput = input[i];
-    shiftOut(dataPin_vfd, clockPin_vfd, MSBFIRST, VfdTable[SelInput]);
-  }
-  digitalWrite(latchPin_vfd, HIGH);
-}
+VFD vfd(dataPin_vfd, clockPin_vfd, latchPin_vfd, NrOfTubes);
 
 
 void enableAll(){
@@ -59,18 +22,12 @@ void enableAll(){
 
 
 void setup() {
-  pinMode(latchPin_vfd, OUTPUT);
-  pinMode(clockPin_vfd, OUTPUT);
-  pinMode(dataPin_vfd, OUTPUT);
   pinMode(latchPin_enable, OUTPUT);
   pinMode(clockPin_enable, OUTPUT);
-  pinMode(dataPin_enable, OUTPUT);
-  
-  
-  tableSetup();
+  pinMode(dataPin_enable, OUTPUT);  
+  vfd.begin();
   enableAll();
-  printDisplay("-[A5]-");
-
+  vfd.printDisplay("[AS]");
 
 }
 
