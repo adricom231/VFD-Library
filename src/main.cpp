@@ -1,39 +1,25 @@
 #include <Arduino.h>
 #include <VFD.h>
-int latchPin_vfd = 2;
-int clockPin_vfd = 1;
-int dataPin_vfd = 44;
+const int latchPin_vfd = 2;
+const int clockPin_vfd = 1;
+const int dataPin_vfd = 44;
 
-int latchPin_enable = 7;
-int clockPin_enable = 8;
-int dataPin_enable = 9;
-const int NrOfTubes = 6;
+const int latchPin_enable = 7;
+const int clockPin_enable = 8;
+const int dataPin_enable = 9;
 
-VFD vfd(dataPin_vfd, clockPin_vfd, latchPin_vfd, NrOfTubes);
-
-
-void enableAll(){
-  byte data =B11111111;
-  digitalWrite(latchPin_enable, LOW);
-  shiftOut(dataPin_enable, clockPin_enable, MSBFIRST, data);
-  digitalWrite(latchPin_enable, HIGH);
-}
-
+VFD vfd(dataPin_vfd, clockPin_vfd, latchPin_vfd, 6);
+VFD clon(dataPin_enable, clockPin_enable, latchPin_enable, 1);
 
 
 void setup() {
-  pinMode(latchPin_enable, OUTPUT);
-  pinMode(clockPin_enable, OUTPUT);
-  pinMode(dataPin_enable, OUTPUT);  
   vfd.begin();
-  enableAll();
-  vfd.printDisplay("[AS]");
-
+  clon.onAll();
+  vfd.printDisplay("[A5]");
 }
 
 
 void loop() {
-
 }
 
 
