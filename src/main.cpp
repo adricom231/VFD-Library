@@ -1,9 +1,16 @@
 #include <Arduino.h>
 
+int latchPin_vfd = 2;
+int clockPin_vfd = 1;
+int dataPin_vfd = 44;
+
+int latchPin_enable = 7;
+int clockPin_enable = 8;
+int dataPin_enable = 9;
 
 
 byte VfdTable[128] = {0};
-void setup() {
+void tableSetup(){
   VfdTable['-'] = B00001000;
   VfdTable['['] = B00010111;
   VfdTable[']'] = B10110001;
@@ -23,6 +30,41 @@ void setup() {
   VfdTable['D'] = B10110111;
   VfdTable['E'] = B00011111;
   VfdTable['F'] = B00011110;
+}
+
+void printDisplay(String input){
+  digitalWrite(latchPin_vfd, LOW);
+  char SelInput = ' ';
+  for(int i = 6; i >= 0 ; i--){
+    SelInput = input[i];
+    shiftOut(dataPin_vfd, clockPin_vfd, MSBFIRST, VfdTable[SelInput]);
+  }
+  digitalWrite(latchPin_vfd, HIGH);
+}
+
+
+void enableAll(){
+  byte data =B11111111;
+  digitalWrite(latchPin_enable, LOW);
+  shiftOut(dataPin_enable, clockPin_enable, MSBFIRST, data);
+  digitalWrite(latchPin_enable, HIGH);
+}
+
+
+
+void setup() {
+  pinMode(latchPin_vfd, OUTPUT);
+  pinMode(clockPin_vfd, OUTPUT);
+  pinMode(dataPin_vfd, OUTPUT);
+  pinMode(latchPin_enable, OUTPUT);
+  pinMode(clockPin_enable, OUTPUT);
+  pinMode(dataPin_enable, OUTPUT);
+  
+  
+  tableSetup();
+  enableAll();
+  printDisplay("123456");
+
 
 }
 
@@ -30,6 +72,8 @@ void setup() {
 void loop() {
 
 }
+
+
 
 
 //1- right bottom
